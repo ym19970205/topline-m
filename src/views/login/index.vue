@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import { login } from '../../api/user'
 export default {
   name: 'LoginPage',
   data () {
@@ -34,6 +35,33 @@ export default {
       user: {
         mobile: '',
         code: ''
+      }
+    }
+  },
+  computed: {},
+  watch: {},
+  created () {},
+  mounted () {},
+  methods: {
+    async onLogin () {
+      const user = this.user
+      // 1.获取表单数据
+      // 2.注册点击登录事件
+      // 3.表单验证
+      // 4.发请求提交
+      this.$toast.loading({
+        message: '登录中...',
+        forbidClick: true,
+        duration: 0 // 持续展示 toast
+      })
+      try {
+        const res = await login(user)
+        console.log(res)
+
+        this.$toast.success('登录成功')
+      } catch (err) {
+        console.log('登录失败', err)
+        this.$toast.fail('登录失败')
       }
     }
   }
