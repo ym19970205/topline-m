@@ -1,3 +1,14 @@
 import Vue from 'vue'
-import { Button } from 'vant'
+import {
+  Cell,
+  CellGroup,
+  Button,
+  NavBar,
+  Field
+}
+  from 'vant'
 Vue.use(Button)
+  .use(Cell)
+  .use(CellGroup)
+  .use(NavBar)
+  .use(Field)
