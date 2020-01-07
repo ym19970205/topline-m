@@ -20,7 +20,7 @@
   </van-field>
 </van-cell-group>
 <div class="login-btn-box">
-    <van-button type="info">登录</van-button>
+    <van-button type="info" @click="onLogin">登录</van-button>
 </div>
   </div>
 
