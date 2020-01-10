@@ -21,3 +21,18 @@ Object.keys(rules).forEach(rule => {
     message: messages[rule]
   })
 })
+
+// 天机自定义验证规则
+extend('mobile', {
+  validate: value => {
+    return /^1(3|5|6|7|8|9)\d{9}$/.test(value)
+  },
+  message: '{_field_}格式错误'
+})
+
+extend('code', {
+  validate: value => {
+    return /^\d{6}$/.test(value)
+  },
+  message: '{_field_}格式错误'
+})

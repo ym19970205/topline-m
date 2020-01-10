@@ -20,7 +20,7 @@ rules="required|length:4" 多个验证规则使用 | 分隔
 v-slot="{ errors }" 获取错误消息，使用 errors[0] 绑定展示错误消息
 -->
 <ValidationObserver ref="form">
-  <ValidationProvider name="手机号" rules="required">
+  <ValidationProvider name="手机号" rules="required|mobile">
   <van-field
     v-model="user.mobile"
     label="手机号"
@@ -30,7 +30,7 @@ v-slot="{ errors }" 获取错误消息，使用 errors[0] 绑定展示错误消�
   <!-- <span>{{errors[0]}}</span> -->
   </ValidationProvider>
 
-  <ValidationProvider name="验证码" rules="required">
+  <ValidationProvider name="验证码" rules="required|code">
   <van-field
     v-model="user.code"
     label="验证码"
@@ -60,6 +60,7 @@ v-slot="{ errors }" 获取错误消息，使用 errors[0] 绑定展示错误消�
 
 <script>
 import { login, getSmsCode } from '../../api/user'
+import { validate } from 'vee-validate'
 export default {
   name: 'LoginPage',
   data () {
@@ -122,7 +123,21 @@ export default {
     // 1. 获取手机号
       const { mobile } = this.user
       // 2.校验手机号
+      // 如果验证失败，提示错误消息，停止发送验证码
+      // 参数1：要验证的数据
+      // 参数2：验证规则
+      // 参数3：一个可选的配置对象，例如配置错误消息字段名称 name
+      // 返回值：{ valid, errors, ... }
+      //          valid: 验证是否成功，成功 true，失败 false
+      //          errors：一个数组，错误提示消息
+      const validateResult = await validate(mobile, 'required|mobile', {
+        name: '手机号'
+      })
 
+      if (!validateResult.valid) {
+        this.$toast(validateResult.errors[0])
+        return
+      }
       // 3.发送验证码
       try {
       // 显示倒计时
