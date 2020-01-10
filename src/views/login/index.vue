@@ -3,18 +3,38 @@
      <van-nav-bar
         title="登录"
     />
+<!--
+  使用表单验证
+  1、使用 ValidationObserver 把需要校验的整个表单包起来
 
-<van-cell-group>
+2、使用 ValidationProvider 把需要校验的具体表单元素包起来，例如 input
+
+3、通过 ValidationProvider 配置具体的校验规则
+
+name 配置验证字段的名称
+
+rules 验证规则
+
+rules="requried" 单个验证规则
+rules="required|length:4" 多个验证规则使用 | 分隔
+v-slot="{ errors }" 获取错误消息，使用 errors[0] 绑定展示错误消息
+-->
+<ValidationObserver ref="form">
+  <ValidationProvider name="手机号" rules="required">
   <van-field
     v-model="user.mobile"
-    label="用户名"
-    placeholder="请输入用户名"
-  />
+    label="手机号"
+    placeholder="请输入手机号"
+  >
+  </van-field>
+  <!-- <span>{{errors[0]}}</span> -->
+  </ValidationProvider>
 
+  <ValidationProvider name="验证码" rules="required">
   <van-field
     v-model="user.code"
-    label="密码"
-    placeholder="请输入密码"
+    label="验证码"
+    placeholder="请输入验证码"
   >
   <van-button
    v-if="buttonStates"
@@ -29,7 +49,8 @@
   @finish="buttonStates= true"
 />
   </van-field>
-</van-cell-group>
+  </ValidationProvider>
+</ValidationObserver>
 <div class="login-btn-box">
     <van-button type="info" @click="onLogin">登录</van-button>
 </div>
@@ -55,8 +76,28 @@ export default {
   created () {},
   mounted () {},
   methods: {
+    // 验证规则
     async onLogin () {
       const user = this.user
+      // 验证规则
+      const success = await this.$refs.form.validate()
+      // 如果验证失败 提示错误消息
+      if (!success) {
+        setTimeout(() => {
+          // console.log(this.$refs.form.errors)
+
+          // 得到错误消息
+          const errors = this.$refs.form.errors
+          // 显示有错误的第一个数组中的提示信息，遍历数据
+          const item = Object.values(errors).find(item => {
+            // item：['错误消息']
+            return item[0]
+          })
+          this.$toast(item[0])
+        }, 200)
+        return
+      }
+
       // 1.获取表单数据
       // 2.注册点击登录事件
       // 3.表单验证
