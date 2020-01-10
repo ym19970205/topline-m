@@ -16,7 +16,18 @@
     label="密码"
     placeholder="请输入密码"
   >
-  <van-button slot="button" size="small" type="primary">获取验证码</van-button>
+  <van-button
+   v-if="buttonStates"
+   slot="button"
+   size="small"
+   type="primary"
+   @click="getSendSCode">获取验证码</van-button>
+  <van-count-down slot="button" v-else
+  millisecond
+  :time="1000*60"
+  format="ss s"
+  @finish="buttonStates= true"
+/>
   </van-field>
 </van-cell-group>
 <div class="login-btn-box">
@@ -27,7 +38,7 @@
 </template>
 
 <script>
-import { login } from '../../api/user'
+import { login, getSmsCode } from '../../api/user'
 export default {
   name: 'LoginPage',
   data () {
@@ -35,7 +46,8 @@ export default {
       user: {
         mobile: '',
         code: ''
-      }
+      },
+      buttonStates: true // 是否显示倒计时
     }
   },
   computed: {},
@@ -63,8 +75,35 @@ export default {
         console.log('登录失败', err)
         this.$toast.fail('登录失败')
       }
+    },
+    // 发送验证码点击事件
+    async getSendSCode () {
+    // 1. 获取手机号
+      const { mobile } = this.user
+      // 2.校验手机号
+
+      // 3.发送验证码
+      try {
+      // 显示倒计时
+        this.buttonStates = false
+        // 发送
+        await getSmsCode(mobile)
+      } catch (error) {
+        console.log(error)
+
+        // 发送失败，显示按钮
+        this.buttonStates = true
+
+        // 判断操作过于频繁，给一个提示
+        if (error.response.status === 429) {
+          this.$toast('操作过于频繁')
+          return
+        }
+        this.$toast.fail('发送失败')
+      }
     }
   }
+
 }
 </script>
 
