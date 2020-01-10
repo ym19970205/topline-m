@@ -77,7 +77,7 @@ export default {
   created () {},
   mounted () {},
   methods: {
-    // 验证规则
+    // 验证登录
     async onLogin () {
       const user = this.user
       // 验证规则
@@ -108,9 +108,13 @@ export default {
         forbidClick: true,
         duration: 0 // 持续展示 toast
       })
+
+      // 请求提交
       try {
         const res = await login(user)
-        console.log(res)
+        // console.log(res)
+        // 登录成功后，将登录状态存储到Vuex容器中
+        this.$store.commit('setUser', res.data.data)
 
         this.$toast.success('登录成功')
       } catch (err) {
