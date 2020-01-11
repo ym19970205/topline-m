@@ -18,7 +18,7 @@ request.defaults.transformResponse = [function (data) {
 }]
 
 // 请求拦截器
-axios.interceptors.request.use(function (config) {
+request.interceptors.request.use(function (config) {
   // 统一设置Token,不是组件不能直接获取vuex容器
   const { user } = store.state
   // 判断一下有没有token，后端要求我们放到请求头中，使用名字Authorization
@@ -33,7 +33,7 @@ axios.interceptors.request.use(function (config) {
 })
 
 // 响应拦截器
-axios.interceptors.response.use(function (response) {
+request.interceptors.response.use(function (response) {
   // Any status code that lie within the range of 2xx cause this function to trigger
   // Do something with response data
   return response
