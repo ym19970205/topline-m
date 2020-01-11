@@ -64,6 +64,7 @@
       <van-cell
         style="text-align: center;"
         title="退出登录"
+        @click="onLogout"
         clickable
       />
     </van-cell-group>
@@ -92,6 +93,18 @@ export default {
   },
   mounted () {},
   methods: {
+    onLogout () {
+      this.$dialog.confirm({
+        title: '退出提示',
+        message: '确认退出吗'
+      }).then(() => {
+        // 点击确认后清除token
+        this.$store.commit('setItem', null)
+      }).catch(() => {
+        this.$toast('已取消退出')
+      })
+    },
+    // 获取用户详细信息
     async loadUser () {
       try {
         const { data } = await getUserInfo()
