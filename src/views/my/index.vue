@@ -99,7 +99,7 @@ export default {
         message: '确认退出吗'
       }).then(() => {
         // 点击确认后清除token
-        this.$store.commit('setItem', null)
+        this.$store.commit('setUser', null)
       }).catch(() => {
         this.$toast('已取消退出')
       })
