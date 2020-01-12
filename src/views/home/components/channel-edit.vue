@@ -19,6 +19,7 @@
               v-for="channel in remainingChannels"
               :key="channel.id"
               :text="channel.name"
+              @click="onChannelAdd(channel)"
             />
           </van-grid>
   </div>
@@ -60,6 +61,11 @@ export default {
   },
   mounted () {},
   methods: {
+    // 点击推荐频道按钮添加到我的频道
+    onChannelAdd (channel) {
+      this.userChannels.push(channel)
+    },
+    // 获取所有频道列表
     async loadAllChannels () {
       const { data } = await getAllChannels()
       this.allChannels = data.data.channels
@@ -68,8 +74,25 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang='less'>
 .channel-edit {
   padding: 40px 0;
+  ::v-deep .van-grid-item__content {
+    position: relative;
+    .van-grid-item__icon-wrapper {
+      position: absolute;
+      top: -10px;
+      right: -5px;
+      .close-icon {
+        font-size: 16px;
+      }
+    }
+  }
+  .text {
+    font-size: 14px;
+  }
+  .active {
+    color: red;
+  }
 }
 </style>
