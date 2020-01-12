@@ -30,7 +30,7 @@
         :style="{ height: '100%' }"
       >
       <!--频道编辑组件-->
-      <channel-edit></channel-edit>
+      <channel-edit :userChannels="userChannels"></channel-edit>
       </van-popup>
 
       <!--Popup 弹出层-->
