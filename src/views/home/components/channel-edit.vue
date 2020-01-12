@@ -16,15 +16,16 @@
       </van-cell>
           <van-grid :gutter="10">
             <van-grid-item
-              v-for="value in 8"
-              :key="value"
-              text="文字"
+              v-for="channel in remainingChannels"
+              :key="channel.id"
+              :text="channel.name"
             />
           </van-grid>
   </div>
 </template>
 
 <script>
+import { getAllChannels } from '@/api/channel'
 export default {
   name: 'ChannelEdit',
   components: {},
@@ -35,13 +36,35 @@ export default {
     }
   },
   data () {
-    return {}
+    return {
+      allChannels: [] // 接收所有的频道
+    }
   },
-  computed: {},
+  computed: {
+    remainingChannels () {
+      // 剩余频道=所有频道-我的频道
+      const { userChannels, allChannels } = this
+      const channels = []
+      // 遍历所有频道
+      allChannels.forEach(item => {
+        if (!userChannels.find(c => c.id === item.id)) {
+          channels.push(item)
+        }
+      })
+      return channels
+    }
+  },
   watch: {},
-  created () {},
+  created () {
+    this.loadAllChannels()
+  },
   mounted () {},
-  methods: {}
+  methods: {
+    async loadAllChannels () {
+      const { data } = await getAllChannels()
+      this.allChannels = data.data.channels
+    }
+  }
 }
 </script>
 
