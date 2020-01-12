@@ -57,8 +57,6 @@ export default {
         timestamp: this.timestamp || Date.now(), // 时间戳，请求新的推荐数据传当前的时间戳，请求历史推荐传指定的时间戳
         with_top: 1 // 是否包含置顶，进入页面第一次请求时要包含置顶文章，1-包含置顶，0-不包含
       })
-      console.log(data)
-
       // 2.把请求获取到的数据添加到数组列表中
       const results = data.data.results
       this.list.push(...results)
@@ -92,12 +90,29 @@ export default {
     //   }, 500)
     // },
     // 文章列表下拉刷新
-    onRefresh () {
-      setTimeout(() => {
-        this.$toast('刷新成功')
-        this.isLoading = false
-        this.count++
-      }, 1000)
+    async onRefresh () {
+      // 1.请求数据
+      const { data } = await getArticles({
+        channel_id: this.channel.id,
+        timestamp: this.timestamp,
+        with_top: 1
+      })
+      // console.log(data.data.results)
+
+      // 2.如果有新的数据，把最新的数据放到列表前
+      const results = data.data.results
+      this.list.unshift(...results)
+
+      // 3.关闭下拉刷新
+      this.isLoading = false
+      // 4.提示更新成功条数
+      this.$toast(`更新了${results.length}条数据`)
+
+      // setTimeout(() => {
+      //   this.$toast('刷新成功')
+      //   this.isLoading = false
+      //   this.count++
+      // }, 1000)
     }
   }
 }
