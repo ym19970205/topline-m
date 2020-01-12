@@ -5,6 +5,11 @@
 
       <!--频道列表-->
       <van-tabs v-model="active">
+        <van-icon
+        name="wap-nav"
+        slot="nav-right"
+        @click="show=true"
+        />
         <van-tab
         v-for="channel in userChannels"
         :title="channel.name"
@@ -15,6 +20,15 @@
       </van-tab>
     </van-tabs>
       <!--频道列表-->
+
+      <!--Popup 弹出层-->
+      <van-popup
+        v-model="show"
+        position="bottom"
+        closeable
+        close-icon-position="top-left"
+        :style="{ height: '100%' }"
+      />
 
   </div>
 </template>
@@ -33,7 +47,8 @@ export default {
     return {
       active: 0,
       // 获取频道列表
-      userChannels: []
+      userChannels: [],
+      show: false // 是否显示我的频道
     }
   },
   computed: {},
@@ -78,6 +93,12 @@ export default {
   left: 0;
   right: 0;
   z-index: 2;
+}
+.van-icon {
+    position: fixed;
+    right: 0px;
+    line-height: 44px;
+    background-color: #fff;
 }
 
 </style>
